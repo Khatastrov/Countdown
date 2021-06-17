@@ -9,71 +9,139 @@
     <link href="favicon.ico" rel="icon" type="image/x-icon" />
     <title>Il te reste...</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            background-color: black;
+            background-color: rgb(21, 21, 21);
             color: white;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;    
             font-family: 'Roboto', sans-serif;  
         }
+        main {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         #timer {
-            fonct-size: 3rem;
-            margin-bottom: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 2rem;
+            margin-bottom: 150px;
             font-weight: 400;
+        }
+        .case {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .digit {
             margin-left: 10px;
-            font-size: 5rem;
+            font-size: 15rem;    
         }
         #sentence {
             font-weight: 100;
             text-align: center;
+        }
+        .secs>.digit {
+            animation: changeColor 1s infinite;    
+        }
+        @keyframes changeColor {
+            from {
+                color:  rgb(129, 18, 18);
+            }
+            to {
+                color: white;
+            }
         }
     </style>
 </head>
 <body>
     <main>
         <section id="timer">
+            <section class="case days">
+                <div class="digit">--</div>
+                <div>jours</div>
+            </section>
+            <section class="case hours">
+            <div class="digit">--</div>
+            <div>heures</div>
+            </section>
+            <section class="case mins">
+                <div class="digit">--</div>
+                <div>minutes</div>
+            </section>
+            <section class="case secs">
+                <div class="digit">--</div>
+                <div>secondes</div>
+            </section>
         </section>
         <section id="sentence">
+            before jury 2
         </section>
     </main>
     <script>
+        // HELPER
+        const get = (el, all = false) => {
+            el = el.trim()
+            if (all) {
+                return [...document.querySelectorAll(el)]
+            } else {
+                return document.querySelector(el)
+            }
+        }
+
+        // write 01 instead of 1
+        const affZ = (value) => {
+            if (value < 10) {
+                return "0" + value;
+            }
+            return value;
+        }
+
+        // COUNTDOWN
         // Set the date we're counting down to
-        var date = new Date("Sep 27, 2021 09:30:00").getTime();
-        // var date = new Date();
-        // console.log(date);
+        const date = new Date("Sep 27, 2021 09:30:00").getTime();
         
         // Update the count down every 1 second
-        var x = setInterval(function() {
-        
-          // Get today's date and time
-          var now = new Date().getTime();
-            
-          // Find the distance between now and the count down date
-          var distance = date - now;
+        const x = setInterval(function() {
+          var sec = get(".secs").classList.replace("red", "white");
+          const now = new Date().getTime();
+          const diff = date - now;
             
           // Time calculations for days, hours, minutes and seconds
-          var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-          var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-          var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-          // Output the result in an element with id="demo"
-          
+          const days = affZ(Math.floor(diff / (1000 * 60 * 60 * 24)));
+          const hours = affZ(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+          const minutes = affZ(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+          const seconds = affZ(Math.floor((diff % (1000 * 60)) / 1000));         
             
           // If the count down is over, write some text 
-          if (distance < 0) {
+          if (diff <= 0) {
             clearInterval(x);
             document.getElementById("timer").style.display = "none";
-            document.getElementById("sentence").innerHTML = "C'EST LA MERDE !";
+            var sent = get("#sentence");
+            sent.classList.add("digit");
+            sent.innerHTML = "C'EST LA MERDE !";
+            
           } else {
-            document.getElementById("timer").innerHTML = `<span class="digit">${days}</span> jours <span class="digit">${hours}</span> heures <span class="digit">${minutes}</span> minutes <span class="digit">${seconds}</span> secondes`;
-            document.getElementById("sentence").innerHTML = "avant de passer devant <b>le jury projet 2</b>"
+            var el =  get(".days>.digit").innerHTML = days;
+            var el = get(".hours>.digit").innerHTML = hours;
+            var el = get(".mins>.digit").innerHTML = minutes;
+            var el = get(".secs>.digit").innerHTML = seconds;
+
+            //var sec = get(".secs").classList.replace("white", "red");
+
+            document.getElementById("sentence").innerHTML = "avant le jury projet 2"
           }
         }, 1000);
+
+        
         </script>
 </body>
 </html>
